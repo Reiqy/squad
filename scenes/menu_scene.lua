@@ -6,8 +6,14 @@ local t = {}
 
 local changeScene
 
+t.endMusic = false
+
 local function onButtonPlay()
     changeScene("game")
+end
+
+local function onMuteMusic()
+    t.endMusic = not t.endMusic
 end
 
 local function onButtonCredits()
@@ -20,6 +26,7 @@ end
 
 local buttons = {
     {text="Play", action=onButtonPlay, selected=false},
+    {text="Mute Music", action=onMuteMusic, selected=false},
     {text="Credits", action=onButtonCredits, selected=false},
     {text="Exit", action=onButtonExit, selected=false}
 }
@@ -49,7 +56,6 @@ function t.setupScene(_changeScene)
             button.text = love.graphics.newText(font, button.text)
         end
     end
-    print(game_scene.level)
     if (game_scene.level) then
         buttons[1].additionalText = love.graphics.newText(font, " (Level " .. tostring(game_scene.level) .. ")")
     end

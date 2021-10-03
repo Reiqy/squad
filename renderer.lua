@@ -7,6 +7,18 @@ local transform, canvas
 local textToRender = {}
 local defaultFont, font
 
+local assetsLoaded = false
+local moduleStraight
+local moduleRight
+local moduleLeft
+local moduleDoubleRight
+local moduleDoubleLeft
+
+local modules = {}
+
+
+local moduleSelector
+
 function t.setup(_sourceWidth, _sourceHeight, _targetWidth, _targetHeight)
     transform = love.math.newTransform()
     transform:scale(_targetWidth / _sourceWidth, _targetHeight / _sourceHeight)
@@ -15,6 +27,25 @@ function t.setup(_sourceWidth, _sourceHeight, _targetWidth, _targetHeight)
 
     defaultFont = love.graphics.getFont()
     font = love.graphics.newFont(resources.fonts.bitPotion, 48)
+
+    if (not assetsLoaded) then
+        assetsLoaded = true
+        moduleStraight = love.graphics.newImage(resources.sprites.moduleStraight)
+        moduleRight = love.graphics.newImage(resources.sprites.moduleRight)
+        moduleLeft = love.graphics.newImage(resources.sprites.moduleLeft)
+        moduleDoubleRight = love.graphics.newImage(resources.sprites.moduleDoubleRight)
+        moduleDoubleLeft = love.graphics.newImage(resources.sprites.moduleDoubleLeft)
+
+        moduleSelector = love.graphics.newImage(resources.sprites.moduleSelector)
+
+        modules = {
+            straight=moduleStraight,
+            left=moduleLeft,
+            right=moduleRight,
+            doubleLeft=moduleDoubleLeft,
+            doubleRight=moduleDoubleRight
+        }
+    end
 end
 
 function t.getFont()
@@ -67,10 +98,17 @@ local function drawBombModule(_module)
         love.graphics.rectangle("fill", 0, 0, 64, 64)
         love.graphics.setColor(r, g, b, a)
         t.print("Test", 32, 32)
+    elseif (_module.type ~= "none") then
+        love.graphics.push()
+        love.graphics.translate(32, 32)
+        love.graphics.rotate(_module.rotation * math.pi / 2)
+        love.graphics.translate(-32, -32)
+        love.graphics.draw(modules[_module.type], 0, 0)
+        love.graphics.pop()
     end
 end
 
-local function drawBombModules(_modules)
+local function drawBombModules(_modules, _selectedModule)
     for i, module in ipairs(_modules) do
         love.graphics.push()
 
@@ -84,16 +122,18 @@ local function drawBombModules(_modules)
 
         drawBombModule(module)
 
+        if (i == _selectedModule) then
+            love.graphics.draw(moduleSelector, 0, 0)
+        end
+
         love.graphics.pop()
     end
 end
 
-local function drawBombCase(_bomb)
+local function drawBombCase(_bomb, _selectedModule)
     love.graphics.push()
-    love.graphics.rectangle("fill", 0, 0, 256, 152)
-
     love.graphics.translate(16, 8)
-    drawBombModules(_bomb.modules)
+    drawBombModules(_bomb.modules, _selectedModule)
     love.graphics.pop()
 end
 
@@ -118,19 +158,19 @@ end
 
 local function drawTimer(_timer)
     local minutes, seconds = timeToDisplay(_timer.time)
-    t.print(minutes .. ":" .. seconds, 0, 0)
+    t.print(minutes .. ":" .. seconds, 0, 0, 153 / 255, 229 / 255, 80 / 255)
 end
 
-function t.drawBomb(_bomb)
+function t.drawBomb(_bomb, _selectedModule)
     love.graphics.push()
     love.graphics.translate(16, 8)
-    drawBombCase(_bomb)
+    drawBombCase(_bomb, _selectedModule)
     love.graphics.push()
-    love.graphics.translate(4, 154)
-    t.print("S/N: " .. _bomb.serialNumber, 0, 0)
+    love.graphics.translate(16, 151)
+    t.print("S/N: " .. _bomb.serialNumber, 0, 0, 69 / 255, 40 / 255, 60 / 255)
     love.graphics.pop()
     love.graphics.push()
-    love.graphics.translate(268, 4)
+    love.graphics.translate(265, 6)
     drawTimer(_bomb.timer)
     love.graphics.pop()
     love.graphics.pop()

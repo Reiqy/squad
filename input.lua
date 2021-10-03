@@ -15,6 +15,12 @@ function t.getInput()
     if love.keyboard.isDown("s") or love.keyboard.isDown("down") or (joystick ~= nil and (joystick:getAxis(2) > 0.5 or joystick:getHat(1) == "d")) then
         return "down"
     end
+    if love.keyboard.isDown("m") then
+        return "music"
+    end
+    if love.keyboard.isDown("f12") then
+        return "debug"
+    end
     if love.keyboard.isDown("return") or love.keyboard.isDown("kpenter") or (joystick ~= nil and (joystick:isDown(1) or joystick:isDown(3))) then
         return "enter"
     end
