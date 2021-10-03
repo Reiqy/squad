@@ -137,14 +137,10 @@ local function drawBombScene(_selectedModule)
     end
 end
 
--- local function drawBlueprintScene()
---     love.graphics.draw(blueprintBackground, 0, 0)
--- end
-
 function t.drawScene()
     drawBombScene(selectedModule)
     for i, text in ipairs(lines) do
-        renderer.print(text, 32, 100 + (i - 1) * 16, 69 / 255, 40 / 255, 60 / 255)
+        renderer.print(text, 18, 100 + (i - 1) * 12, 69 / 255, 40 / 255, 60 / 255)
     end
 end
 

@@ -30,7 +30,9 @@ t.joinedModules = {}
 
 t.lines = {
     "Press [ENTER] or [X] or [A] to rotate object.",
-    "Press [SPACE] to speed up time."
+    "Press [SPACE] to speed up time.",
+    "If the bomb doesn't explode when the timer runs out,",
+    "you go to the next level."
 }
 
 return t
