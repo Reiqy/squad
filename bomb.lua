@@ -3,7 +3,12 @@ local timer = require "timer"
 local t = {}
 
 function t.newBomb(_serialNumber, _time)
-    return {serialNumber=_serialNumber, timer=timer.newTimer(_time), modules={}}
+    return {
+        serialNumber=_serialNumber,
+        timer=timer.newTimer(_time),
+        sources={},
+        modules={}
+    }
 end
 
 function t.addModule(_bomb, _module)
@@ -14,19 +19,17 @@ function t.newModule(_type)
     return {type=_type}
 end
 
--- Wire module
+local function newCutModule(_prefab)
+    local module = t.newModule("cut")
 
-function t.newWireModule()
-    local module = t.newModule("wire")
-    module.red = true
-    module.green = true
-    module.blue = true
+    return module
 end
 
--- Password module
-
-function t.newPasswordModule()
-    local module = t.newPasswordModule()
+function t.newModuleFromPrefab(_prefab)
+    if (_prefab.type == "cut") then
+        return newCutModule(_prefab)
+    end
+    return t.newModule("test")
 end
 
 return t

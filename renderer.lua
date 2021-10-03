@@ -17,15 +17,23 @@ function t.setup(_sourceWidth, _sourceHeight, _targetWidth, _targetHeight)
     font = love.graphics.newFont(resources.fonts.bitPotion, 48)
 end
 
+function t.getFont()
+    return font
+end
+
 function t.beginDraw()
     love.graphics.setCanvas(canvas)
+    love.graphics.clear()
     love.graphics.setFont(font)
 end
 
 local function drawText()
     for _, text in ipairs(textToRender) do
         local x, y = transform:transformPoint(text.position.x, text.position.y)
+        r, g, b, a = love.graphics.getColor()
+        love.graphics.setColor(text.r, text.g, text.b)
         love.graphics.print(text.text, x, y)
+        love.graphics.setColor(r, g, b, a)
     end
     textToRender = {}
 end
@@ -42,22 +50,22 @@ function t.endDraw()
     love.graphics.setFont(defaultFont)
 end
 
-function t.print(_text, _x, _y)
+function t.print(_text, _x, _y, _r, _g, _b)
+    _r = _r or 1
+    _g = _g or 1
+    _b = _b or 1
     local x, y = love.graphics.transformPoint(_x, _y)
-    table.insert(textToRender, {text=_text, position=geometry.newVec2(x, y)})
+    table.insert(textToRender, {text=_text, position=geometry.newVec2(x, y), r=_r, g=_g, b=_b})
 end
 
 -- Bomb
 
 local function drawBombModule(_module)
-    local r, g, b, a = love.graphics.getColor()
-    love.graphics.setColor(1, 0, 0)
-
-    love.graphics.rectangle("fill", 0, 0, 64, 64)
-
-    love.graphics.setColor(r, g, b, a)
-
     if (_module.type == "test") then
+        local r, g, b, a = love.graphics.getColor()
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle("fill", 0, 0, 64, 64)
+        love.graphics.setColor(r, g, b, a)
         t.print("Test", 32, 32)
     end
 end
@@ -126,6 +134,11 @@ function t.drawBomb(_bomb)
     drawTimer(_bomb.timer)
     love.graphics.pop()
     love.graphics.pop()
+end
+
+-- Blueprint
+
+function t.drawBlueprint(_bomb)
 end
 
 return t
