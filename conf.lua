@@ -1,6 +1,6 @@
 function love.conf(t)
     t.version = "11.3"                  -- The LÖVE version this game was made for (string)
-    t.console = true                    -- Attach a console (boolean, Windows only)
+    t.console = false                    -- Attach a console (boolean, Windows only)
     t.gammacorrect = false              -- Enable gamma-correct rendering, when supported by the system (boolean)
     t.window.title = "How (Not) To Defuse Bombs"         -- The window title (string)
     t.window.icon = nil                 -- Filepath to an image to use as the window's icon (string)
